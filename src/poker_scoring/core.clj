@@ -46,8 +46,9 @@
 (def player-one (atom 0))
 (def player-two (atom 0))
 
-(defn get-card-value [card]
+(defn get-card-value
   "takes a card and return the rank of card without the suit"
+  [card]
   (as-> (subs card 0 (- (count card) 1)) card-rank
     (case card-rank
       "T" 10

@@ -8,21 +8,27 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
-FIXME: explanation
+Run using:
 
-    $ java -jar poker-scoring-0.1.0-standalone.jar [args]
+    $ java -jar poker-scoring-0.1.0-standalone.jar
+    Enter the filepath:
+    poker-hands.txt (if file is in the same folder, else use full filepath)
 
 ## Options
 
-FIXME: listing of options this app accepts.
+   You can also pipe in the filepath or filename if file is in the same directory.
+
 
 ## Examples
 
-...
+   $ echo poker-hands.txt | java -jar poker-scoring-0.1.0-SNAPSHOT-standalone.jar
 
-### Bugs
+### Comments
 
-...
+    * Although I would have liked to. I did not write any test scripts.
+    * This program does not take into account the situation of when both players have the same straight. As suits are not used to break ties.There will be hands that will tie. However, requirements specifically asked to not use suits to break ties and the test documentdoes not contain any games where both players tied.
+    * I would have liked to have written more comments and docstring if time allowed.
+    * The code is not ideal but it does the job. Would love to fix it up in the future when time is not a constraint.
 
 ### Any Other Sections
 ### That You Think
