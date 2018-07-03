@@ -4,7 +4,7 @@
   (require [clojure.java.io :as io])
   (require [clojure.string :as str]))
 
-
+;;; Premade poker hands used while testing. Didn't have time to write real tests.
 (def poker-hand
   '("QH" "JH" "AH" "10H" "KH"))
 
@@ -42,12 +42,12 @@
   '("4H" "AH" "4C" "4D" "KS"))
 
 ;;; What happens when both cards are straights of same sequence?
-
+;;; Turns out the data for this test was cleaned to ensure this never happens.
 (def player-one (atom 0))
 (def player-two (atom 0))
 
 (defn get-card-value
-  "takes a card and return the rank of card without the suit"
+  "takes a card and return the value of card without the suit"
   [card]
   (as-> (subs card 0 (- (count card) 1)) card-rank
     (case card-rank
@@ -69,13 +69,10 @@
                      :straight-flush 9
                      :royal-flush    10})
 
-(defn create-card-frequency-list [hand]
+(defn create-card-frequency-list
+  "takes a hand an returns a list with a card number of times a card appears"
+  [hand]
   (frequencies (map get-card-value hand)))
-
-(defn highest-card-value [hand]
-  (-> (map get-card-value hand)
-      sort
-      last))
 
 (defn flush? [hand]
   (if (= (-> (map last hand)
@@ -100,6 +97,13 @@
            (flush? hand))
     :straight-flush
     false))
+
+(defn highest-card-value
+  "returns the value of the highest card. Used for identifying royal flush."
+  [hand]
+  (-> (map get-card-value hand)
+      sort
+      last))
 
 (defn royal-flush? [hand]
   (if (and (straight-flush? hand)
@@ -153,6 +157,8 @@
     :full-house
     false))
 
+;;; I don't like the way this function is written,
+;;; maybe I could put this in a case statement.
 (defn check-for-five-card-combos [hand]
   (if (royal-flush? hand)
     (royal-flush? hand)
@@ -173,7 +179,9 @@
     (four-kind? freq-list)
     (full-house? freq-list)))
 
-(defn determine-hand [hand]
+(defn determine-hand
+  "Find the number of unique cards in a hand and apply the corrosponding function"
+  [hand]
   (let [card-frequency (create-card-frequency-list hand)
         unique-cards (count card-frequency)]
     (case unique-cards
@@ -211,7 +219,9 @@
        (map first)
        order-three-kind-single-cards))
 
-(defn create-value-list [hand]
+(defn create-value-list
+  "Return a list with the <value of the hand> first, followed by the <values of the cards> in descending order (hand-value card-values...)"
+  [hand]
   (let [hand-result    (determine-hand hand)
         card-freq-list (create-card-frequency-list hand)
         score          (hand-result hand-value-map)]
@@ -234,7 +244,6 @@
            1
            2)))
 
-
 (defn compare-hands [game]
   (loop [hand-1-value (create-value-list (take 5 game))
          hand-2-value (create-value-list (take-last 5 game))
@@ -250,7 +259,7 @@
       (swap! player-two inc))))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Take in a file with list of 2 opposing poker hands. Scores the number of wins of each player"
   [& args]
   (println "Enter the filepath: ")
   (let [file-name (read-line)]
